@@ -1,0 +1,21 @@
+{
+  "name": "api-builder",
+  "version": "0.0.1",
+  "description": "A project used to generate and serve user-defined api responses for given inputs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -r esm index.js --ignore db.json"
+  },
+  "author": "Ben McHone",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "esm": "^3.2.18",
+    "express": "^4.16.4",
+    "lowdb": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
