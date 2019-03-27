@@ -3,10 +3,6 @@ import update from 'immutability-helper';
 
 class Rule extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   updateRule = (e) => {
       const { target: element } = e;
       const data = element.dataset;

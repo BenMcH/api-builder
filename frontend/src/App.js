@@ -1,32 +1,44 @@
 import React, { Component } from 'react';
 import TitleRow from './TitleRow.js';
 import RuleCollection from './RuleCollection.js';
+import update from 'immutability-helper';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {inputParameters: [], outputParameters: [], ruleSet: []};
+    this.state = {title: "stateAbbreviations", apiDefinition: {description: "", inputParameters: [], outputParameters: [], ruleSet: []}};
   }
 
   componentDidMount() {
-    fetch('http://localhost:8080/api/stateAbbreviations')
+    fetch(`http://localhost:8080/api/${this.state.title}`)
       .then(res => res.json())
-      .then(json => this.setState({...json}));    
+      .then(apiDefinition => this.setState({apiDefinition}));
   }
 
   updateRules(ruleSet) {
-    this.setState({ruleSet});
+    this.setState(update(this.state, {apiDefinition: {ruleSet: {$set: ruleSet}}}));
+  }
+
+  saveChanges() {
+    fetch(`http://localhost:8080/api/${this.state.title}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.apiDefinition)
+    }).then(response => console.log(response));
   }
 
   render() {
+    const { apiDefinition } = this.state;
     return (
       <div className="App">
-        <header className="App-header">
-          <table>
-            <TitleRow apiDefinition={this.state}/>
-            <RuleCollection apiDefinition={this.state} updateRules={this.updateRules.bind(this)}/>
-          </table>
-        </header>
+        <button type="save" onClick={_ => this.saveChanges()}>Save</button>
+        <input type="text" value={this.state.title} onChange={e => this.setState({title: e.target.value})} />
+        <table>
+          <TitleRow apiDefinition={apiDefinition}/>
+          <RuleCollection apiDefinition={apiDefinition} updateRules={this.updateRules.bind(this)}/>
+        </table>
       </div>
     );
   }
