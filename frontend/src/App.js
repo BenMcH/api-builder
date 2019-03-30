@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TitleRow from './TitleRow.js';
-import RuleCollection from './RuleCollection.js';
+import RuleBody from './RuleBody.js';
 import update from 'immutability-helper';
 
 class App extends Component {
@@ -37,7 +37,7 @@ class App extends Component {
         <input type="text" value={this.state.title} onChange={e => this.setState({title: e.target.value})} />
         <table>
           <TitleRow apiDefinition={apiDefinition}/>
-          <RuleCollection apiDefinition={apiDefinition} updateRules={this.updateRules.bind(this)}/>
+          <RuleBody apiDefinition={apiDefinition} updateRules={this.updateRules.bind(this)}/>
         </table>
       </div>
     );

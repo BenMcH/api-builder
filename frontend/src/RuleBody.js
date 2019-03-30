@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Rule from './Rule.js';
 import update from 'immutability-helper';
 
-class RuleCollection extends Component {
+class RuleBody extends Component {
   updateRule = (index, rule) => {
     this.props.updateRules(update(this.props.apiDefinition.ruleSet, {
       [index]: { $set: rule}
@@ -19,4 +19,4 @@ class RuleCollection extends Component {
   }
 }
 
-export default RuleCollection;
+export default RuleBody;
