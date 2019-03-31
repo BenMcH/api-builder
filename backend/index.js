@@ -15,13 +15,12 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/api/:api', (req, res) => {
   const apiData = db.getApi(req.params.api);
-  //delete apiData.ruleSet;
   res.json(apiData);
 })
 
 app.post('/api/:api', (req, res) => {
   const api = {...(db.getApi(req.params.api) || {}), ...req.body};
-  filesystemDatabase
+  db.setApi(req.params.api, api);
   res.sendStatus(200);
 })
 
