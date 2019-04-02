@@ -10,8 +10,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 const port = 8080;
 const db = filesystemDatabase('db.json');
 
-
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/api', (req, res) => {
+  res.json(db.getApis())
+})
 
 app.get('/api/:api', (req, res) => {
   const apiData = db.getApi(req.params.api);
