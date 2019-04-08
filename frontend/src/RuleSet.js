@@ -1,60 +1,61 @@
-import React, { Component } from 'react';
-import TitleRow from './TitleRow.js';
-import RuleBody from './RuleBody.js';
+import React, { useState, useEffect } from 'react';
+import Rule from './Rule';
 import update from 'immutability-helper';
 
-const defaultState = {apiDefinition: {description: "", inputParameters: [], outputParameters: [], ruleSet: []}};
+const RuleSet = (props) => {
+  const [description, setDescription] = useState("")
+  const [inputParameters, setInputParameters] = useState([]);
+  const [outputParameters, setOutputParameters] = useState([]);
+  const [ruleSet, setRuleSet] = useState([]);
 
-class RuleSet extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = defaultState;
-  }
-
-  componentDidMount() {
-    this.fetchUpdate();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.name !== prevProps.name) {
-      this.setState(defaultState, this.fetchUpdate);
-    }
-  }
-
-  fetchUpdate = () => fetch(`http://localhost:8080/api/${this.props.name}`)
+  const fetchUpdate = () => fetch(`http://localhost:8080/api/${props.name}`)
                         .then(res => res.json())
-                        .then(apiDefinition => this.setState({apiDefinition}));
+                        .then(apiDefinition => {
+                          setDescription(apiDefinition.description);
+                          setInputParameters(apiDefinition.inputParameters);
+                          setOutputParameters(apiDefinition.outputParameters);
+                          setRuleSet(apiDefinition.ruleSet);
+                        });
 
 
-  updateRules(ruleSet) {
-    this.setState(update(this.state, {apiDefinition: {ruleSet: {$set: ruleSet}}}));
-  }
+  useEffect(() => {fetchUpdate()}, [props.name]);
+  const getValue = input => input && input.target && input.target.value ? input.target.value : input;
+  const updateArray = (array, callback) => (index, e) => callback(update(array, {[index]: {$set: getValue(e)}}));
+  const updateInputParameter = updateArray(inputParameters, setInputParameters);
+  const updateOutputParameter = updateArray(outputParameters, setOutputParameters);
+  const updateRule = updateArray(ruleSet, setRuleSet)
 
-  saveChanges() {
-    fetch(`http://localhost:8080/api/${this.props.name}`, {
+  const saveChanges = () => {
+    fetch(`http://localhost:8080/api/${props.name}1`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(this.state.apiDefinition)
-    }).then(response => console.log(response));
+      body: JSON.stringify({description, inputParameters, outputParameters, ruleSet})
+    });
   }
 
-  render() {
-    const { apiDefinition } = this.state;
-    const { name } = this.props;
-    return (
-      <div className="rule-set">
-        <button type="save" onClick={_ => this.saveChanges()}>Save</button>
-        <input type="text" value={name} readOnly={true} />
-        <table>
-          <TitleRow apiDefinition={apiDefinition}/>
-          <RuleBody apiDefinition={apiDefinition} updateRules={this.updateRules.bind(this)}/>
-        </table>
-      </div>
-    );
-  }
+  return (
+    <div className="rule-set">
+      <button type="save" onClick={saveChanges.bind(null)}>Save</button>
+      <input type="text" value={props.name} readOnly={true} />
+      <table>
+        <thead>
+          <tr>
+            <th colSpan={inputParameters.length}>Input</th>
+            <th colSpan={outputParameters.length}>Output</th>
+          </tr>
+          <tr>
+            {inputParameters.map((value, index) => <th key={index}><input type="text" value={value} onChange={updateInputParameter.bind(this, index)} /></th>)}
+            {outputParameters.map((value, index) => <th key={index}><input type="text" value={value} onChange={updateOutputParameter.bind(this, index)} /></th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {ruleSet.map((rule, index) => <Rule key={index} inputParameters={inputParameters} outputParameters={outputParameters} rule={rule} update={updateRule.bind(this, index)}/>)}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default RuleSet;
