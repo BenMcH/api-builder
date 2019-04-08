@@ -1,19 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import RuleSet from './RuleSet.js';
-import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Link } from './Utils.js'
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 const App = () => (
   <Router>
-    <Route path="/" exact render={() => (<Directory />)} />
-    <Route path="/api/:name" component={ruleSet} />
+    <Route path="/" exact component={Directory} />
+    <Route path="/api/:name" component={RuleSet} />
   </Router>
-);
-
-const ruleSet = ({match: {params: {name}}}) => (
-    <div className="App">
-      <Link to="/">Back to Directory</Link>
-      <RuleSet name={name} />
-    </div>
 );
 
 const Directory = () => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "./Utils";
 import Rule from './Rule';
 import update from 'immutability-helper';
 
@@ -7,8 +8,9 @@ const RuleSet = (props) => {
   const [inputParameters, setInputParameters] = useState([]);
   const [outputParameters, setOutputParameters] = useState([]);
   const [ruleSet, setRuleSet] = useState([]);
+  const {match: {params: { name }}} = props;
 
-  const fetchUpdate = () => fetch(`http://localhost:8080/api/${props.name}`)
+  const fetchUpdate = () => fetch(`http://localhost:8080/api/${name}`)
                         .then(res => res.json())
                         .then(apiDefinition => {
                           setDescription(apiDefinition.description);
@@ -18,15 +20,16 @@ const RuleSet = (props) => {
                         });
 
 
-  useEffect(() => {fetchUpdate()}, [props.name]);
+  useEffect(() => {fetchUpdate()}, [name]);
   const getValue = input => input && input.target && input.target.value ? input.target.value : input;
   const updateArray = (array, callback) => (index, e) => callback(update(array, {[index]: {$set: getValue(e)}}));
   const updateInputParameter = updateArray(inputParameters, setInputParameters);
   const updateOutputParameter = updateArray(outputParameters, setOutputParameters);
-  const updateRule = updateArray(ruleSet, setRuleSet)
+  const updateRule = updateArray(ruleSet, setRuleSet);
+  const updateDescription = (e) => setDescription(e.target.value);
 
   const saveChanges = () => {
-    fetch(`http://localhost:8080/api/${props.name}1`, {
+    fetch(`http://localhost:8080/api/${name}`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -37,8 +40,12 @@ const RuleSet = (props) => {
 
   return (
     <div className="rule-set">
+      <Link to="/">Back to Directory</Link>
+      <h1>{name}</h1>
       <button type="save" onClick={saveChanges.bind(null)}>Save</button>
-      <input type="text" value={props.name} readOnly={true} />
+      <section>
+        <input type="text" value={description} onChange={updateDescription} />
+      </section>
       <table>
         <thead>
           <tr>
