@@ -11,7 +11,7 @@ const port = 8080;
 const db = filesystemDatabase('db.json');
 
 app.get('/api', (req, res) => {
-  res.json(db.getApis())
+  res.json({apis: db.getApis()})
 })
 
 app.get('/api/:api', (req, res) => {
