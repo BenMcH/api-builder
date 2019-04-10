@@ -19,7 +19,7 @@ app.get('/api/:api', (req, res) => {
   res.json(apiData);
 })
 
-app.post('/api/:api', (req, res) => {
+app.put('/api/:api', (req, res) => {
   const api = {...(db.getApi(req.params.api) || {}), ...req.body};
   db.setApi(req.params.api, api);
   res.sendStatus(200);

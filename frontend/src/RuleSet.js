@@ -30,7 +30,7 @@ const RuleSet = (props) => {
 
   const saveChanges = () => {
     fetch(`http://localhost:8080/api/${name}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         'Content-Type': 'application/json'
       },
