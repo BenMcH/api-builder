@@ -25,6 +25,18 @@ app.put('/api/:api', (req, res) => {
   res.sendStatus(200);
 })
 
+app.post('/api/:api', (req, res) => {
+  const input = req.body;
+  const api = db.getApi(req.params.api);
+  const checkInputParams = rule => api.inputParameters.every(key => (rule.input[key] && rule.input[key] === "") || rule.input[key] == input[key]);
+  const rules = api.ruleSet.filter(checkInputParams).map(rule => rule.output).map(output => {
+    const data = {};
+    api.outputParameters.forEach(param => data[param] = output[param]);
+    return data;
+  });
+  res.json({rules});
+})
+
 app.get('/api/:api/rules', (req, res) => {
   const apiData = db.getApi(req.params.api);
   
