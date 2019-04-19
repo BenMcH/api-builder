@@ -1,9 +1,10 @@
 {
   "apis": {
     "stateAbbreviations": {
-      "description": "State Abreviations to State Name",
+      "description": "State Abbreviations",
       "inputParameters": [
-        "abbreviation"
+        "abbreviation",
+        "isState"
       ],
       "outputParameters": [
         "abbreviation",
@@ -102,7 +103,8 @@
         },
         {
           "input": {
-            "abbreviation": "FM"
+            "abbreviation": "FM",
+            "isState": "false"
           },
           "output": {
             "abbreviation": "FM",

@@ -27,6 +27,7 @@ const RuleSet = (props) => {
   const updateOutputParameter = updateArray(outputParameters, setOutputParameters);
   const updateRule = updateArray(ruleSet, setRuleSet);
   const updateDescription = (e) => setDescription(e.target.value);
+  const addToArray = (arr, updateFunc) => updateFunc([...arr, '']);
 
   const saveChanges = () => {
     fetch(`http://localhost:8080/api/${name}`, {
@@ -49,8 +50,8 @@ const RuleSet = (props) => {
       <table>
         <thead>
           <tr>
-            <th colSpan={inputParameters.length}>Input</th>
-            <th colSpan={outputParameters.length}>Output</th>
+            <th colSpan={inputParameters.length}>Input <button onClick={addToArray.bind(this, inputParameters, setInputParameters)}>+</button></th>
+            <th colSpan={outputParameters.length}>Output <button onClick={addToArray.bind(this, inputParameters, setInputParameters)}>+</button></th>
           </tr>
           <tr>
             {inputParameters.map((value, index) => <th key={index}><input type="text" value={value} onChange={updateInputParameter.bind(this, index)} /></th>)}
