@@ -51,7 +51,7 @@ const RuleSet = (props) => {
         <thead>
           <tr>
             <th colSpan={inputParameters.length}>Input <button onClick={addToArray.bind(this, inputParameters, setInputParameters)}>+</button></th>
-            <th colSpan={outputParameters.length}>Output <button onClick={addToArray.bind(this, inputParameters, setInputParameters)}>+</button></th>
+            <th colSpan={outputParameters.length}>Output <button onClick={addToArray.bind(this, outputParameters, setOutputParameters)}>+</button></th>
           </tr>
           <tr>
             {inputParameters.map((value, index) => <th key={index}><input type="text" value={value} onChange={updateInputParameter.bind(this, index)} /></th>)}
